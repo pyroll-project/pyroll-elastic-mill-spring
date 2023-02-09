@@ -1,5 +1,5 @@
 import logging
-from pyroll.core import RollPass, Hook
+from pyroll.core import RollPass, Hook, root_hooks
 
 VERSION = "2.0.0b"
 
@@ -32,6 +32,12 @@ def roll_gap_offset(self: RollPass):
 
 @RollPass.gap
 def gap(self: RollPass):
+    if not hasattr(self, "_nominal_roll_gap"):
+        self._nominal_roll_gap = self.gap
+
     if self.has_value("roll_gap_offset"):
-        gap = self.gap + self.roll_gap_offset
+        gap = self._nominal_roll_gap + self.roll_gap_offset
         return gap
+
+
+root_hooks.add(RollPass.gap)
