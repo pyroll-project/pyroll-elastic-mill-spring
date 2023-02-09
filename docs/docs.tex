@@ -9,48 +9,36 @@
 % Document
 \begin{document}
 
-    \title{Hitchcook roll flattening PyRoll Plugin}
+    \title{Elastic mill spring PyRoll Plugin}
     \author{Christoph Renzing}
     \date{\today}
 
     \maketitle
 
-    This plugin provides the analytical roll flattening model developed by \textcite{Hitchcook1935} and adapted by \textcite{BohmFlaxa1981, FlaxaHinkfothBohm1979}.
+    This plugin calculates the elastic roll stand feedback according to the Gaugemeter equation.
 
 
     \section{Model approach}\label{sec:model-approach}
 
-    The models are derived from the general theory of elasticity.
-    According to Hitchcock, roll flattening due too high forces and large contact lengths has to be considered as it enhances calculation of roll force and torque.
-    \textcite{Hitchcook1935} assumed the pressure distribution for rolling to be elliptical,
-    therefore the roll shape stays cylindrical and a replacement radius larger than the can be calculated.
-    Bohm and Flaxa \textcite{BohmFlaxa1981, FlaxaHinkfothBohm1979} extended the usage of the method to greater initial ($R_0$) to flattened roll radii ($R_1$)
-    For the calculation the roll force and the elastic constants of the roll material are required.
-    Furthermore the calculation has to be done in an iterative way.
-    To implement the method for groove rolling, the calculations are done using a equivalent rectangle.
-    Equivalent variables are denoted $eq$.
+    During rolling, the stand in which the rolls as well as secondary equipment are mounted, is normally treated as rigid.
+    Measurements and investigations by \textcite{Weber1973} show, that this is not correct and the whole setup should be viewed as an elastic system of springs.
+    Since not all of those values can be measured sufficiently, the elastic response of the whole stand is modeled by a single spring constant ($C$).
+    This constant is depended on the roll force ($F_W$) which is applied and therefore leads to a offset between set ($s_0$) and real ($s_1$) roll gap.
+    This can be modeled according to the Gaugemeter equation.
 
-    To calculate the flattened radius following equation is used:
-
-    \begin{subequations}
-        \begin{equation}
-            \frac{R_\mathrm{1}}{R_\mathrm{0}} = 1 + \frac{16}{\pi} \frac{ - \nu_\mathrm{W}^2}{E_\mathrm{W}} \frac{F_\mathrm{Roll}}{h_\mathrm{eq,0} - s}, \frac{R_\mathrm{1}}{R_\mathrm{0}} < 5.235
-            \label{eq:hitchcook-1}\\
-        \end{equation}
-        \begin{equation}
-            \frac{R_\mathrm{1}}{R_\mathrm{0}} = \left(  \frac{16}{\pi} \frac{1 - \nu_\mathrm{W}^2}{E_\mathrm{W}} \frac{F_\mathrm{Roll}}{h_\mathrm{eq,0} - s} \right)^{\frac{2}{3}}, \frac{R_\mathrm{1}}{R_\mathrm{0}} > 5.235
-            \label{eq:hitchcook-2}
-        \end{equation}
-    \end{subequations}
+    \begin{equation}
+        s_1 = s_0 + \frac{F_W}{C_S}
+        \label{eq:gaugemeter-equation}
+    \end{equation}
 
 
     \section{Usage instructions}\label{sec:usage-instructions}
 
-    The plugin can be loaded under the name \texttt{pyroll\_hitchcock\_roll\_flattening}.
+    The plugin can be loaded under the name \texttt{pyroll\_elastic\_mill\_spring}.
 
-    An implementation of the hooks \lstinline{flattened_radius} and \lstinline{flattening_ratio}
-    for calculation the values for $R_1$ and $\frac{R_1}{R_0}$ are provided on the \lstinline{Roll}.
-    Several additional hooks on \lstinline{Roll} are defined, which are used for calculation, as listed in \autoref{tab:hookspecs}.
+    An implementation of the hook \lstinline{gap} is provided on the \lstinline{RollPass}.
+    Furthermore, a hook calculating the \lstinline{roll_gap_offset} is provided.
+    Several additional hooks on \lstinline{RollPass} are defined, which are used for calculation, as listed in \autoref{tab:hookspecs}.
 
     \begin{table}
         \centering
@@ -58,15 +46,9 @@
         \label{tab:hookspecs}
         \begin{tabular}{ll}
             \toprule
-            Hook name                      & Meaning                                                      \\
+            Hook name                       & Meaning                              \\
             \midrule
-            \texttt{poissons\_ratio}       & Poissons's ratio of roll material $\nu_\mathrm{W}$           \\
-            \texttt{youngs\_modulus}       & Youngs's modulus of roll material $E_\mathrm{W}$             \\
-            \texttt{flattening\_ratio}     & Ratio between flattened and initial radius $\frac{R_1}{R_0}$ \\
-            \texttt{flattened\_radius}     & Flattened roll radius $R_1$                                  \\
-            \texttt{max\_roll\_radius}     & Max.~roll radius                                             \\
-            \texttt{min\_roll\_radius}     & Min.~roll radius                                             \\
-            \texttt{working\_roll\_radius} & Working roll radius                                          \\
+            \texttt{mill\_stand\_stiffness} & Spring coefficient of the stand  $C_S$ \\
             \bottomrule
         \end{tabular}
     \end{table}
