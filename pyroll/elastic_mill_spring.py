@@ -1,7 +1,7 @@
 import logging
 from pyroll.core import RollPass, Hook, root_hooks
 
-VERSION = "2.0.0b"
+VERSION = "2.0.0"
 
 log = logging.getLogger(__name__)
 
