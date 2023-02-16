@@ -10,7 +10,7 @@ path = "pyroll/elastic_mill_spring.py"
 path = ".venv"
 dependencies = [
     "pytest ~= 7.0",
-    "pyroll-report ~= 2.0.0b",
+    "pyroll-report ~= 2.0.0",
 ]
 
 
