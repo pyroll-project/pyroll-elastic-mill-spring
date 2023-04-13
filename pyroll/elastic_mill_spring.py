@@ -21,7 +21,7 @@ def roll_stand_stiffness(self: RollPass):
 def roll_gap_offset(self: RollPass):
     """Calculates the roll gap offset."""
 
-    if "roll_force" not in self.__dict__:
+    if not self.has_set_or_cached("roll_force"):
         roll_gap_offset = 0
     else:
         roll_gap_offset = self.roll_force / self.roll_stand_stiffness
@@ -35,9 +35,8 @@ def gap(self: RollPass):
     if not hasattr(self, "_nominal_roll_gap"):
         self._nominal_roll_gap = self.gap
 
-    if self.has_value("roll_gap_offset"):
-        gap = self._nominal_roll_gap + self.roll_gap_offset
-        return gap
+    gap = self._nominal_roll_gap + self.roll_gap_offset
+    return gap
 
 
 root_hooks.add(RollPass.gap)
