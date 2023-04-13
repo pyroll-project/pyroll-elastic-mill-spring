@@ -34,10 +34,10 @@
 
     \section{Usage instructions}\label{sec:usage-instructions}
 
-    The plugin can be loaded under the name \texttt{pyroll\_elastic\_mill\_spring}.
+    The plugin can be loaded under the name \texttt{pyroll.elastic\_mill\_spring}.
 
     An implementation of the hook \lstinline{gap} is provided on the \lstinline{RollPass}.
-    Furthermore, a hook calculating the \lstinline{roll_gap_offset} is provided.
+    Furthermore, a hook calculating the \lstinline{gap_offset} is provided.
     Several additional hooks on \lstinline{RollPass} are defined, which are used for calculation, as listed in \autoref{tab:hookspecs}.
 
     \begin{table}
@@ -48,7 +48,8 @@
             \toprule
             Hook name                       & Meaning                              \\
             \midrule
-            \texttt{mill\_stand\_stiffness} & Spring coefficient of the stand  $C_S$ \\
+            \texttt{stand\_stiffness} & Spring coefficient of the stand  $C_S$ \\
+            \texttt{gap\_offset} & Elastic widening of the gap $s_1-s_0$ \\
             \bottomrule
         \end{tabular}
     \end{table}

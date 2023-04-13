@@ -33,7 +33,7 @@ def test_solve(tmp_path: Path, caplog):
                 rotational_frequency=1
             ),
             gap=2e-3,
-            roll_stand_stiffness=3.5e8
+            stand_stiffness=3.5e8
         ),
         Transport(
             label="I => II",
@@ -51,7 +51,7 @@ def test_solve(tmp_path: Path, caplog):
                 rotational_frequency=1
             ),
             gap=2e-3,
-            roll_stand_stiffness=3.5e8
+            stand_stiffness=3.5e8
         ),
     ])
 
