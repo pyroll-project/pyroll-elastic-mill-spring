@@ -10,15 +10,17 @@ RollPass.stand_stiffness = Hook[float]()
 def stand_stiffness(self: RollPass):
     raise ValueError("You must provide a roll stand stiffness to use the pyroll-elastic-mill-spring plugin.")
 
-@RollPass.gap(wrapper=True)
-def gap(self: RollPass, cycle):
+
+@RollPass.gap
+def widened_gap(self: RollPass, cycle):
     if cycle:
         return None
 
-    rigid_gap = (yield)
-    elastic_gap_offset = self.roll_force / self.stand_stiffness
+    if not hasattr(self, "nominal_gap"):
+        self.nominal_gap = self.gap
 
-    elastic_gap = rigid_gap + elastic_gap_offset
+    elastic_gap_offset = self.roll_force / self.stand_stiffness
+    elastic_gap = self.nominal_gap + elastic_gap_offset
     return elastic_gap
 
 
