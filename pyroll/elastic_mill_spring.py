@@ -1,18 +1,18 @@
-from pyroll.core import RollPass, Hook, root_hooks
+from pyroll.core import BaseRollPass, Hook, root_hooks
 
-VERSION = "2.1"
+VERSION = "3.0.0"
 
-RollPass.stand_stiffness = Hook[float]()
+BaseRollPass.stand_stiffness = Hook[float]()
 """Stiffness of the roll stand of the current roll pass."""
 
 
-@RollPass.stand_stiffness
-def stand_stiffness(self: RollPass):
+@BaseRollPass.stand_stiffness
+def stand_stiffness(self: BaseRollPass):
     raise ValueError("You must provide a roll stand stiffness to use the pyroll-elastic-mill-spring plugin.")
 
 
-@RollPass.gap
-def widened_gap(self: RollPass, cycle):
+@BaseRollPass.gap
+def widened_gap(self: BaseRollPass, cycle):
     if cycle:
         return None
 
@@ -24,4 +24,4 @@ def widened_gap(self: RollPass, cycle):
     return elastic_gap
 
 
-root_hooks.add(RollPass.gap)
+root_hooks.add(BaseRollPass.gap)
