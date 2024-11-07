@@ -1,27 +1,36 @@
-from pyroll.core import BaseRollPass, Hook, root_hooks
+from pyroll.core import SymmetricRollPass, Hook, root_hooks
 
 VERSION = "3.0.0"
 
-BaseRollPass.stand_stiffness = Hook[float]()
+SymmetricRollPass.stand_stiffness = Hook[float]()
 """Stiffness of the roll stand of the current roll pass."""
 
+SymmetricRollPass.elastic_gap_offset = Hook[float]()
+"""Elastic roll gap offset of the roll stand of the current roll pass."""
 
-@BaseRollPass.stand_stiffness
-def stand_stiffness(self: BaseRollPass):
-    raise ValueError("You must provide a roll stand stiffness to use the pyroll-elastic-mill-spring plugin.")
+@SymmetricRollPass.stand_stiffness
+def default_stand_stiffness(self: SymmetricRollPass):
+    return 1
+
+@SymmetricRollPass.elastic_gap_offset
+def default_elastic_gap_offset(self: SymmetricRollPass, cycle):
+    if cycle:
+        return None
+
+    return self.roll_force / self.stand_stiffness
 
 
-@BaseRollPass.gap
-def widened_gap(self: BaseRollPass, cycle):
+@SymmetricRollPass.gap
+def widened_gap(self: SymmetricRollPass, cycle):
     if cycle:
         return None
 
     if not hasattr(self, "nominal_gap"):
         self.nominal_gap = self.gap
 
-    elastic_gap_offset = self.roll_force / self.stand_stiffness
-    elastic_gap = self.nominal_gap + elastic_gap_offset
+    elastic_gap = self.nominal_gap + self.elastic_gap_offset
     return elastic_gap
 
 
-root_hooks.add(BaseRollPass.gap)
+root_hooks.add(SymmetricRollPass.gap)
+root_hooks.add(SymmetricRollPass.elastic_gap_offset)
