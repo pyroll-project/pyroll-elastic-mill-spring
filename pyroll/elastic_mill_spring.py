@@ -10,7 +10,7 @@ SymmetricRollPass.elastic_gap_offset = Hook[float]()
 
 @SymmetricRollPass.stand_stiffness
 def default_stand_stiffness(self: SymmetricRollPass):
-    return 1
+    return 1e9
 
 @SymmetricRollPass.elastic_gap_offset
 def default_elastic_gap_offset(self: SymmetricRollPass, cycle):
