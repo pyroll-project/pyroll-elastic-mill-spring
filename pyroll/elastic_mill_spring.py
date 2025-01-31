@@ -1,6 +1,6 @@
 from pyroll.core import SymmetricRollPass, Hook, root_hooks
 
-VERSION = "3.0.0"
+VERSION = "3.0.1"
 
 SymmetricRollPass.stand_stiffness = Hook[float]()
 """Stiffness of the roll stand of the current roll pass."""
